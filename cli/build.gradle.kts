@@ -11,3 +11,12 @@ kotlin {
         jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
     }
 }
+
+dependencies {
+    // Source: https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation("com.google.code.gson:gson:2.14.0")
+}
+
+tasks.withType<JavaExec> {
+    standardInput = System.`in`
+}
