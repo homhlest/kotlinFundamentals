@@ -2,7 +2,7 @@ package com.example.cli
 
 /*This is a heavily stripped down version of the calculator.
 It works just with digits: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
-Has just four operations are available here.
+Has just four operations: +, -, *, /.
 There is no division by zero check.
 */
 
@@ -44,14 +44,23 @@ fun inputIsCorrect (userInput: String): Boolean {
     return (userInput.length == 1 && (userInput in "1234567890" || userInput in "+-*/"))
 }
 
+// The function Checking for division by zero.
+fun zeroDivision (operand: String, operator: String): Boolean  {
+    return ((operand == "0") && (operator == "/"))
+}
+
 // The function is responsible for calculating the results. And outputs the results to the console.
 fun calculateResult (expressionMembers: List<String>) {
+    if (zeroDivision(expressionMembers[1], expressionMembers[2])) {
+        println("Division by zero is undefined.")
+        return
+    }
     print("Result: ")
-    println(when (expressionMembers[2]) {
+    val result = when (expressionMembers[2]) {
         "+" -> expressionMembers[0].toDouble() + expressionMembers[1].toDouble()
         "-" -> expressionMembers[0].toDouble() - expressionMembers[1].toDouble()
         "*" -> expressionMembers[0].toDouble() * expressionMembers[1].toDouble()
         "/" -> expressionMembers[0].toDouble() / expressionMembers[1].toDouble()
         else -> println(0)
-    })
+    }
 }
