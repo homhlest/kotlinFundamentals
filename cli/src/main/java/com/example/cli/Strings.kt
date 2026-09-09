@@ -55,7 +55,7 @@ fun calculateResult (expressionMembers: List<String>) {
         println("Division by zero is undefined.")
         return
     }
-    print("Result: ")
+    print("Result = ")
     val result = when (expressionMembers[2]) {
         "+" -> expressionMembers[0].toDouble() + expressionMembers[1].toDouble()
         "-" -> expressionMembers[0].toDouble() - expressionMembers[1].toDouble()
@@ -63,4 +63,5 @@ fun calculateResult (expressionMembers: List<String>) {
         "/" -> expressionMembers[0].toDouble() / expressionMembers[1].toDouble()
         else -> println(0)
     }
+    println(result)
 }
