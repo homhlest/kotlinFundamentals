@@ -2,69 +2,76 @@ package com.example.cli
 
 import kotlin.collections.indices
 
+/*This is a stripped-down version of the 15-puzzle game.
+It does not validate whether the correct number is entered.*/
+
+const val GAME_BOARD_SIZE = 2
+const val EMPTY_CELL_DESIGN = "\u25A1"
+
 fun main() {
     val field = createGameField()
     printGameField(field)
     while (true) {
-        moveCellOnTheField(field, userInput())
+        move(field, userInput())
         printGameField(field)
-        if(gameIsOver(field)) break
-    }
-}
-
-// Outputting the game board in the console.
-fun printGameField(gameField: Array<Array<String>>) {
-    println("-".repeat(14))
-    for (i in gameField.indices) {
-        for (j in gameField[i].indices) {
-            print("${gameField[i][j]} \t")
+        if(gameIsOver(field)) {
+            println("You win!")
+            break
         }
-        println()
     }
-    println("-".repeat(14))
 }
 
 // Creating a two-dimensional array.
 fun createGameField(): Array<Array<String>> {
-    val gameField = Array(4) { Array(4) {"0"} }
-    addRandomNumbersOnTheField(gameField)
-    addEmptyCellInGameField(gameField)
+    val gameField = Array(GAME_BOARD_SIZE) { Array(GAME_BOARD_SIZE) {"0"} }
+    addNumbersOnTheField(gameField)
     return gameField
 }
 
-// Adding unique numbers from 1 to 15 to the game board.
-fun addRandomNumbersOnTheField(gameField: Array<Array<String>>): Array<Array<String>> {
+// Adding unique numbers from to the game board.
+fun addNumbersOnTheField(gameField: Array<Array<String>>): Array<Array<String>> {
     for(i in gameField.indices) {
         for (j in gameField[i].indices) {
             while (true) {
-                val randomNumber = (1..16).random()
-                if (numberUniq(gameField, randomNumber)) {
+                val randomNumber = (1..4).random()
+                if (numberIsUniq(gameField, randomNumber)) {
                     gameField[i][j] = randomNumber.toString()
                     break
                 }
             }
         }
     }
+    addEmptyCellOnGameField(gameField)
     return gameField
 }
 
-
 // Adding an empty cell to the game board
-fun addEmptyCellInGameField (gameField: Array<Array<String>>): Array<Array<String>> {
+fun addEmptyCellOnGameField (gameField: Array<Array<String>>): Array<Array<String>> {
     for (i in gameField.indices) {
         for (j in gameField[i].indices) {
-            if (gameField[i][j] == "16") {
-                gameField[i][j] = " "
+            if (gameField[i][j] == "4") {
+                gameField[i][j] = EMPTY_CELL_DESIGN // White Square in Unicode
             }
         }
     }
     return gameField
 }
 
+// Outputting the game board in the console.
+fun printGameField(gameField: Array<Array<String>>) {
+    println("=".repeat(5))
+    for (i in gameField.indices) {
+        for (j in gameField[i].indices) {
+            print("${gameField[i][j]} \t")
+        }
+        println()
+    }
+    println("=".repeat(5))
+}
 
-// Checking the uniqueness of added numbers.
-// To ensure the random generator does not add identical numbers to the game board.
-fun numberUniq (gameField: Array<Array<String>>, randomNumber: Int): Boolean {
+// Checking the uniqueness of added numbers. To ensure the random
+// generator does not add identical numbers to the game board.
+fun numberIsUniq (gameField: Array<Array<String>>, randomNumber: Int): Boolean {
     val numberList = mutableListOf<String>()
     for (i in gameField.indices) {
         for (j in gameField[i].indices) {
@@ -74,17 +81,17 @@ fun numberUniq (gameField: Array<Array<String>>, randomNumber: Int): Boolean {
     return !(numberList.contains(randomNumber.toString()))
 }
 
-// Reading user input
+// Reading user input.
 fun userInput(): Int {
-    val message = println("Please, enter a number you wish to move:")
+    println("Please, enter a number you wish to move:")
     val userInputCell = readln().toInt()
     return userInputCell
 }
 
 // Moving numbers on the game board based on user input.
-fun moveCellOnTheField (gameField: Array<Array<String>>, userInputCell: Int): Array<Array<String>> {
+fun move (gameField: Array<Array<String>>, userInputCell: Int): Array<Array<String>> {
     var cell = Pair(0,0) // Coordinates storage
-    // Finding the coordinates of a single number that the user needs to move
+    // Finding the coordinates of a single number that the user needs to move.
     for (i in gameField.indices) {
         for (j in gameField[i].indices) {
             if (gameField[i][j] == userInputCell.toString()) {
@@ -92,28 +99,25 @@ fun moveCellOnTheField (gameField: Array<Array<String>>, userInputCell: Int): Ar
             }
         }
     }
-    // Replace empty cell with user number
+    // Replace empty cell with user number.
     for (i in gameField.indices) {
         for (j in gameField[i].indices) {
-            if (gameField[i][j] == " ") {
+            if (gameField[i][j] == EMPTY_CELL_DESIGN) {
                 gameField[i][j] = userInputCell.toString()
             }
         }
     }
-    // Replace user number with empty cell
-    gameField[cell.first][cell.second] = " "
+    gameField[cell.first][cell.second] = EMPTY_CELL_DESIGN // Replace user number with empty cell.
     return gameField
 }
 
-// Checking if the game is not over (all numbers in the array are sorted in ascending order).
 fun gameIsOver(gameField: Array<Array<String>>): Boolean {
-    val controlGameField = Array(4) { Array(4) { "0" } }
-    var ix = 1
-    for (i in controlGameField.indices) {
-        for (j in controlGameField.indices) {
-            controlGameField[i][j] = ix++.toString()
+    val controlFieldNumbers = mutableListOf("1", "2", "3", EMPTY_CELL_DESIGN)
+    val currentFieldNumbers = mutableListOf<String>()
+    for (i in gameField.indices) {
+        for (j in gameField[i].indices) {
+            currentFieldNumbers.add(gameField[i][j])
         }
     }
-    controlGameField[3][3] = " " // The last cell in the bottom right corner
-    return gameField.contentEquals(controlGameField)
+    return controlFieldNumbers == currentFieldNumbers
 }
