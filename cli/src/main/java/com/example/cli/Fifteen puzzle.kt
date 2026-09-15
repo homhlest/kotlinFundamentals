@@ -3,6 +3,7 @@ package com.example.cli
 import kotlin.collections.indices
 
 /*This is a stripped-down version of the 15-puzzle game.
+For the tests it uses 2X2 game board.
 It does not validate whether the correct number is entered.*/
 
 const val GAME_BOARD_SIZE = 2
