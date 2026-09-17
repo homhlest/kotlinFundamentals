@@ -8,17 +8,15 @@ For the tests it uses 2X2 game board.
 It does not validate whether the correct number is entered.*/
 
 const val GAME_BOARD_SIZE_MVC = 2
+const val TOTAL_CELLS = GAME_BOARD_SIZE_MVC * GAME_BOARD_SIZE_MVC
 
 fun main(){
-    var model = createModelGameBoard()
-    //println("Модел після створення: $model")
+    var model = createModelOfGameBoard()
     var view = createViewOfGameBoard(model)
     outputViewOfGameBoard(view)
     while (true) {
         model = moveMVC(model, userInputMVC())
-        //println("Модел після ходу: $model")
         view = createViewOfGameBoard(model)
-        //println("Вид: ${view.contentDeepToString()}")
         outputViewOfGameBoard(view)
         if (gameIsOverMVC(model)) {
             break
@@ -27,11 +25,11 @@ fun main(){
     }
 }
 
-fun createModelGameBoard(): MutableList<Int> {
-    val modelGameBoard = MutableList(GAME_BOARD_SIZE_MVC*GAME_BOARD_SIZE_MVC) {0}
+fun createModelOfGameBoard(): MutableList<Int> {
+    val modelGameBoard = MutableList(TOTAL_CELLS) {0}
     for (ix in modelGameBoard.indices) {
         while (true) {
-            val randomNumberMVC = (1..(GAME_BOARD_SIZE_MVC * GAME_BOARD_SIZE_MVC)).random()
+            val randomNumberMVC = (1..(TOTAL_CELLS)).random()
             if(!modelGameBoard.contains(randomNumberMVC)) {
                 modelGameBoard[ix] = randomNumberMVC
                 break
@@ -55,7 +53,7 @@ fun createViewOfGameBoard(modelGameBoard: MutableList<Int>): Array<Array<Int>>  
 }
 
 fun outputViewOfGameBoard(view: Array<Array<Int>>) {
-    println("=".repeat(GAME_BOARD_SIZE_MVC*GAME_BOARD_SIZE_MVC))
+    println("=".repeat(TOTAL_CELLS + 1))
     val temp = Array(GAME_BOARD_SIZE_MVC){Array(GAME_BOARD_SIZE_MVC){"X"}}
     for (i in view.indices) {
         for (j in view.indices) {
@@ -67,7 +65,7 @@ fun outputViewOfGameBoard(view: Array<Array<Int>>) {
         }
         println()
     }
-    println("=".repeat(GAME_BOARD_SIZE_MVC*GAME_BOARD_SIZE_MVC))
+    println("=".repeat(TOTAL_CELLS + 1))
 }
 
 // Reading user input.
@@ -79,12 +77,12 @@ fun userInputMVC(): Int {
 
 fun moveMVC(modelGameBoard: MutableList<Int>, userInput: Int): MutableList<Int> {
     Collections.swap(modelGameBoard, modelGameBoard.lastIndexOf(userInput),
-        modelGameBoard.lastIndexOf(GAME_BOARD_SIZE_MVC*GAME_BOARD_SIZE_MVC))
+        modelGameBoard.lastIndexOf(TOTAL_CELLS))
     return modelGameBoard
 }
 
 //fun gameIsOverMVC(modelGameBoard: MutableList<Int>): Boolean {
-//    val controlList = List(GAME_BOARD_SIZE_MVC*GAME_BOARD_SIZE_MVC) {it + 1}
+//    val controlList = List(TOTAL_CELLS) {it + 1}
 //    println("You win!")
 //    return modelGameBoard == controlList
 //}
