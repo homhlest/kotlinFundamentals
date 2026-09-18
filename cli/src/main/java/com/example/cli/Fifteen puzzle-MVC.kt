@@ -21,7 +21,6 @@ fun main(){
         if (gameIsOverMVC(model)) {
             break
         }
-
     }
 }
 
@@ -76,16 +75,11 @@ fun userInputMVC(): Int {
 }
 
 fun moveMVC(modelGameBoard: MutableList<Int>, userInput: Int): MutableList<Int> {
-    Collections.swap(modelGameBoard, modelGameBoard.lastIndexOf(userInput),
+    Collections.swap(modelGameBoard,
+        modelGameBoard.lastIndexOf(userInput),
         modelGameBoard.lastIndexOf(TOTAL_CELLS))
     return modelGameBoard
 }
-
-//fun gameIsOverMVC(modelGameBoard: MutableList<Int>): Boolean {
-//    val controlList = List(TOTAL_CELLS) {it + 1}
-//    println("You win!")
-//    return modelGameBoard == controlList
-//}
 
 fun gameIsOverMVC(modelGameBoard: MutableList<Int>): Boolean {
     var controlNumber = 1
@@ -97,3 +91,9 @@ fun gameIsOverMVC(modelGameBoard: MutableList<Int>): Boolean {
     println("You win!")
     return true
 }
+
+//fun gameIsOverMVC(modelGameBoard: MutableList<Int>): Boolean {
+//    val controlList = List(TOTAL_CELLS) {it + 1}
+//    println("You win!")
+//    return modelGameBoard == controlList
+//}
